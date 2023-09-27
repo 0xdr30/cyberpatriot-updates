@@ -1,4 +1,4 @@
-http://brandonpadgett.com/powershell/Local-gpo-powershell/
+## http://brandonpadgett.com/powershell/Local-gpo-powershell/
 
 ################################################################################################################
 
@@ -17,7 +17,8 @@ function Starting-Menu{
     "1" { Find-File }
     "2" { LocalPol }
     "3" { MS-Scan }
-    "4" { All-Of-The-Above }
+    "4" { Get-MpComputerStatus }
+    "5" { All-Of-The-Above }
     }
 }
 
