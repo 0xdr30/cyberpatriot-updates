@@ -81,6 +81,7 @@ function Full-Scan {
 function Update {
    Write-Host "Installing Windows Updates - Will Reboot when Done"
    Start-Job Get-WindowsUpdate -AcceptAll -Install -AutoReboot
+   Write-Host "take your hands off the vm and do some research and stuff while it updates"
 }
 
 #Run All
