@@ -35,7 +35,7 @@ function MS-Scan{
   Write-Host '2. Full Scan'
   Write-Host '3. Update MS Defender'
   switch($scantype){
-  "1" {  }
+  "1" { Quick-Scan }
   "2" { Full-Scan }
   "3" { Update-Defender }
   }
@@ -45,6 +45,14 @@ function Update-Defender {
   Update-MpSignature
   Set-MpPreference -SignatureScheduleDay Everyday
   Start-MpScan -ScanType QuickScan
+}
+
+function Quick-Scan {
+  Start-MpScan -ScanType QuickScan
+}
+
+function Full-Scan {
+  Start-MpScan -ScanType FullScan
 }
 
 #Run All
