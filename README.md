@@ -1,4 +1,4 @@
-# Fork for cyberpatriot script building
+# forked from [chrisjudk](https://github.com/chrisjudk/arrays-start-at-1)
 
 
 ### Arrays start at 1
