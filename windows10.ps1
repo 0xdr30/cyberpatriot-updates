@@ -1,7 +1,5 @@
-## http://brandonpadgett.com/powershell/Local-gpo-powershell/
-
-################################################################################################################
 # Add-MpPreference -ExlusionPath "C:\Temp" #change to cyberpatriot directory CCS folder
+Write-Host 'Have you Documented the readme?'
 
 Write-Host 'Installing Windows Update Module (may take some time). Select "Yes to all" when prompted'
 Install-Module PSWindowsUpdate
@@ -30,8 +28,8 @@ function Starting-Menu{
 
 #Finding Files
 function Find-File{
-  $path = Read-Host -Prompt 'Input what path you want to search'
-  $extensions = Read-Host -Prompt 'Input what extensions you want to search for'
+  $path = Read-Host -Prompt 'Input what path you want to search (C:\ to recurse the whole system)'
+  $extensions = Read-Host -Prompt 'Input what extensions you want to search for (e.g. mp4, txt, etc.)'
   Get-childitem -Path $path -Recurse -ErrorAction -Include $extensions SilentlyContinue
 }
 
@@ -48,7 +46,6 @@ function MS-Scan{
   "3" { Update-Defender }
   }
 }
-
 function Update-Defender {
   Start-Job Update-MpSignature
   Set-MpPreference -SignatureScheduleDay Everyday
@@ -81,19 +78,51 @@ function Full-Scan {
   Get-MpThreat
 }
 
-#Run All
-function auto {
-  Start-Job MS-Scan
-  Start-Job Update-Defender
-  
-}
-
-
-
 function Update {
    Write-Host "Installing Windows Updates - Will Reboot when Done"
-   Get-WindowsUpdate -AcceptAll -Install -AutoReboot
+   Start-Job Get-WindowsUpdate -AcceptAll -Install -AutoReboot
+}
+
+#Run All
+function auto {
+  Write-Host 'Searching for Files'
+  Find-File
+  Start-Job Start-MpScan -ScanType FullScan
+  Start-Job Update-Defender
+  Start-Job Update
+  Write-Host "Do not power off or mess with the machine while it is updating. Let the update use the resources they need"
 }
 
 
-Starting-Menu
+
+#Run the Script from the Beginning
+function check1 {
+  Write-Host 'Have you Documented the readme?'
+  $answer = Read-Host "yes/no: "
+  switch($answer){
+    "yes" { Check2 }
+    "no" { Write-Host "Do that first" }
+  }
+}
+
+function check2 {
+  Write-Host 'Have you Completed the Forensics Questions and Documented your answers?'
+  $answer = Read-Host "yes/no: "
+  switch($answer){
+    "yes" { check3 }
+    "no" { Write-Host "Do that please" }
+  }
+}
+function check3{
+  Write-Host 'are you ready to hack?'
+  $answer = Read-Host "yes/yes: "
+  switch($answer){
+    "yes" { Starting-Menu }
+    "no" { 
+      Write-Host 'too bad'
+      Starting-Menu
+    }
+  }
+}
+
+check1
