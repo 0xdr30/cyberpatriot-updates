@@ -8,11 +8,13 @@ Install-Module PSWindowsUpdate
 
 function Starting-Menu{ 
   Write-Host 'Choose an option:'
-  Write-Host '1. Find a file'
+  Write-Host '1. Find a File'
   Write-Host '2. Update Local Policy'
   Write-Host '3. MS Defender Scan'
   Write-Host '4. MS Status'
   Write-Host '5. Update Windows'
+  Write-Host '6. MalwareBytes'
+  Write-Host '7. Automate in Background (Will Prompt for Windows Update)'
   
   #Add new choices here
   
@@ -48,7 +50,7 @@ function MS-Scan{
 }
 
 function Update-Defender {
-  Update-MpSignature
+  Start-Job Update-MpSignature
   Set-MpPreference -SignatureScheduleDay Everyday
   Start-MpScan -ScanType QuickScan
   Write-Host "Defender Status: "
@@ -80,10 +82,10 @@ function Full-Scan {
 }
 
 #Run All
-function All-Of-The-Above {
-  MS-Scan
-  Update-Defender
-  Write-Host "Work in Progress, some vulnerabilities are not scripted for automation"
+function auto {
+  Start-Job MS-Scan
+  Start-Job Update-Defender
+  
 }
 
 
