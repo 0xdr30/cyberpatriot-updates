@@ -6,6 +6,8 @@ http://brandonpadgett.com/powershell/Local-gpo-powershell/
 function Starting-Menu{ 
   Write-Host 'Choose an option:'
   Write-Host '1. Find a file'
+  Write-Host '2. Update Local Policy'
+  Write-Host '3. Scan for PUPs'
   #Add new choices here
   
   $choice = Read-Host "Choose a choice"
