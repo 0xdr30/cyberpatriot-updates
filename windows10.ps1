@@ -1,24 +1,28 @@
 ## http://brandonpadgett.com/powershell/Local-gpo-powershell/
 
 ################################################################################################################
+# Add-MpPreference -ExlusionPath "C:\Temp" #change to cyberpatriot directory CCS folder
 
+Write-Host 'Installing Windows Update Module (may take some time). Select "Yes to all" when prompted'
+Install-Module PSWindowsUpdate
 
 function Starting-Menu{ 
   Write-Host 'Choose an option:'
   Write-Host '1. Find a file'
   Write-Host '2. Update Local Policy'
   Write-Host '3. MS Defender Scan'
-  Write-Host '4. Automated'
+  Write-Host '4. MS Status'
+  Write-Host '5. Update Windows'
   
   #Add new choices here
   
-  $choice = Read-Host "Choose a choice"
+  $choice = Read-Host "Choice "
   switch($choice){ #Read user input, choose from that
     "1" { Find-File }
     "2" { LocalPol }
     "3" { MS-Scan }
     "4" { Get-MpComputerStatus }
-    "5" { All-Of-The-Above }
+    "5" { Update }
     }
 }
 
@@ -31,10 +35,11 @@ function Find-File{
 
 # Scanning for Malware and PUPs
 function MS-Scan{
-  $scantype = Read-Host -Prompt 'Choose a Scan Type:'
+  Write-Host 'Select a Scan Type or Option:'
   Write-Host '1. Quick Scan'
   Write-Host '2. Full Scan'
   Write-Host '3. Update MS Defender'
+  $scantype = Read-Host "Choice "
   switch($scantype){
   "1" { Quick-Scan }
   "2" { Full-Scan }
@@ -46,14 +51,32 @@ function Update-Defender {
   Update-MpSignature
   Set-MpPreference -SignatureScheduleDay Everyday
   Start-MpScan -ScanType QuickScan
+  Write-Host "Defender Status: "
+  Get-MpComputerStatus
+  Write-Host "Past Detection: "
+  Get-MpThreatDetection
+  Write-Host "Current Threats Detected: "
+  Get-MpThreat
 }
 
 function Quick-Scan {
   Start-MpScan -ScanType QuickScan
+  Write-Host "Defender Status: "
+  Get-MpComputerStatus
+  Write-Host "Past Detection: "
+  Get-MpThreatDetection
+  Write-Host "Current Threats Detected: "
+  Get-MpThreat
 }
 
 function Full-Scan {
   Start-MpScan -ScanType FullScan
+  Write-Host "Defender Status: "
+  Get-MpComputerStatus
+  Write-Host "Past Detection: "
+  Get-MpThreatDetection
+  Write-Host "Current Threats Detected: "
+  Get-MpThreat
 }
 
 #Run All
@@ -61,6 +84,13 @@ function All-Of-The-Above {
   MS-Scan
   Update-Defender
   Write-Host "Work in Progress, some vulnerabilities are not scripted for automation"
+}
+
+
+
+function Update {
+   Write-Host "Installing Windows Updates - Will Reboot when Done"
+   Get-WindowsUpdate -AcceptAll -Install -AutoReboot
 }
 
 
