@@ -23,6 +23,8 @@ function Starting-Menu{
     "3" { MS-Scan }
     "4" { Get-MpComputerStatus }
     "5" { Update }
+    "6" { MB }
+    
     }
 }
 
@@ -83,6 +85,16 @@ function Update {
    Start-Job Get-WindowsUpdate -AcceptAll -Install -AutoReboot
    Write-Host "take your hands off the vm and do some research and stuff while it updates"
 }
+function MB {
+  Write-Host "Choose an option: "
+  Write-Host "1. Install MalwareBytes"
+  Write-Host "2. Uninstall MalwareBytes"
+  $choice = ReadHost "Choice: "
+  switch($choice){
+    "1" { installMB }
+    "2" { uninstallMB }
+  }
+}
 
 #Run All
 function auto {
@@ -93,7 +105,38 @@ function auto {
   Start-Job Update
   Write-Host "Do not power off or mess with the machine while it is updating. Let the update use the resources they need"
 }
+function installMB {
+  # Silent Install MalwareBytes 
+  # Download URL: https://www.malwarebytes.com/mwb-download/thankyou/
 
+  # Path for the workdir
+  $workdir = "c:\installer\"
+
+  # Check if work directory exists if not create it
+
+  If (Test-Path -Path $workdir -PathType Container)
+  { Write-Host "$workdir already exists" -ForegroundColor Red}
+  ELSE
+  { New-Item -Path $workdir  -ItemType directory }
+
+  # Download the installer
+
+  $source = "https://data-cdn.mbamupdates.com/web/mb3-setup-consumer-3.0.6.1469.exe"
+  $destination = "$workdir\mbam.exe"
+  Invoke-WebRequest $source -OutFile $destination
+
+  # Start the installation
+
+  Start-Process -FilePath "$workdir\mbam.exe" -ArgumentList "/NOCANCEL /NORESTART /VERYSILENT /SUPPRESSMSGBOXES"
+
+  # Wait XX Seconds for the installation to finish
+
+  Start-Sleep -s 35
+
+  # Remove the installer
+
+  rm -Force $workdir\mbam*
+}
 
 
 #Run the Script from the Beginning
